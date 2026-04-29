@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package order;
+
+// ให้ go_package ชี้ไปที่ path ของ Notification Service
+option go_package = "dift_backend_go/notification-service/proto/pb/notification_orderpb;notification_orderpb";
+
+// Event ที่ Notification Service ส่งไป Order Service.
+// Keep field numbers compatible with order-service/proto/notification.proto
+// (message OrderMatchNotification).
+message OrderUpdateEvent {
+  string order_id = 1;
+  string status = 2;
+  string driver_id = 3;
+  string driver_name = 4;
+  string driver_car_model = 5;
+  string driver_avatar_url = 6;
+  string car_plate = 7;
+  string car_type = 8;
+  double driver_lat = 9;
+  double driver_lng = 10;
+  double pickup_lat = 11;
+  double pickup_lng = 12;
+  string pickup_address = 13;
+  double dropoff_lat = 14;
+  double dropoff_lng = 15;
+  string dropoff_address = 16;
+  double distance_pickup_to_dropoff = 17;
+  int32 duration_total = 18;
+  string route_polyline = 19;
+  double price = 20;
+  int64 timestamp = 21;
+}

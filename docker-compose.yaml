@@ -1,0 +1,77 @@
+version: "3.9"
+
+services:
+  # ---------------------------
+  # EventBus (EventBus replacement)
+  # ---------------------------
+  event_bus:
+    image: vectorized/event_bus:v23.1.4
+    container_name: event_bus
+    command: >
+      event_bus start
+      --overprovisioned
+      --smp 1
+      --memory 1G
+      --reserve-memory 0M
+      --node-id 0
+      --event_bus-addr PLAINTEXT://0.0.0.0:9092
+      --advertise-event_bus-addr PLAINTEXT://event_bus:9092
+    ports:
+      - "9092:9092"
+    networks:
+      - notif-net
+
+  # ---------------------------
+  # Eclipse Mosquitto (MQTT Broker)
+  # ---------------------------
+  mqtt-broker:
+    image: eclipse-mosquitto:2.0.15
+    container_name: mqtt-broker
+    ports:
+      - "1883:1883"
+      - "9001:9001" # Websocket optional
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
+    networks:
+      - notif-net
+
+  # ---------------------------
+  # Redis
+  # ---------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - notif-net
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+
+  # ---------------------------
+  # Notification Service
+  # ---------------------------
+  notification-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: notification-service
+    environment:
+      - CONFIG_PATH=/app/config.yaml
+    depends_on:
+      - event_bus
+      - mqtt-broker
+      - redis
+    networks:
+      - notif-net
+    ports:
+      - "2222:2222"
+      - "5051:5051"
+
+# ---------------------------
+# Networks
+# ---------------------------
+networks:
+  notif-net:
+    driver: bridge

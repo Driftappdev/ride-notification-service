@@ -1,0 +1,62 @@
+# ================================
+# notification-service (generic)
+# ================================
+server:
+  http_port: 2222
+  grpc_port: 5051
+  timeout_ms: 5000
+
+nats_event:
+  url: "nats://nats:4222"
+  queue_group: "notification-service-group"
+
+event_bus:
+  brokers:
+    - "nats://nats:4222"
+  group: "notification-service-group"
+  # reserved topics (not for ride flow, keep separated from notification-ride-service)
+  matching_topic: "notification.generic.matching-events"
+  order_topic: "notification.generic.order-events"
+  driver_topic: "notification.generic.driver-events"
+  cancel_topic: "notification.generic.cancel-events"
+
+  # generic notification topics
+  generic_topic: "admin.notification.send"
+  dispatch_topic: "notification.generic.dispatch"
+  status_topic: "notification.delivery.status"
+  event_topics:
+    - "order.status.updated"
+    - "driver.status.updated"
+    - "payment.status.updated"
+
+mqtt:
+  broker: "tcp://mqtt-broker:1883"
+  driver_topic: "ui/driver/general-notification"
+  passenger_topic: "ui/passenger/general-notification"
+  generic_topic: "ui/general/notification"
+  secure: false
+
+providers:
+  default_channels: ["event_bus", "mqtt"]
+  event_bus:
+    enabled: true
+  mqtt:
+    enabled: true
+  fcm:
+    enabled: false
+    endpoint: "https://fcm.googleapis.com/fcm/send"
+    server_key: ""
+    timeout_ms: 4000
+  webhook:
+    enabled: false
+    url: ""
+    auth_token: ""
+    timeout_ms: 4000
+
+redis:
+  url: "redis:6379"
+  password: ""
+  db: 0
+  ttl: "30s"
+  keys:
+    notification_prefix: "notification:"

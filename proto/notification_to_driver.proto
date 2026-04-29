@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package driver;
+
+// ให้ go_package ชี้ไป path ของ Notification Service
+option go_package = "dift_backend_go/notification-service/proto/pb/notification_driverpb;notification_driverpb";
+message Location {
+  double lat = 1;
+  double lng = 2;
+  string address = 3; // Optional human-readable address
+}
+
+// Event ที่ Notification Service ส่งไป Driver Service
+message DriverAssignmentEvent {
+  string route_id = 1;       // Route id
+  string driver_id = 2;      // Driver id
+  string status = 3;         // assigned, cancelled, pending etc.
+
+  // User info (passenger)
+  string user_id = 4;
+
+  // Pickup / Dropoff
+  Location pickup_location = 5;
+  Location dropoff_location = 6;
+
+  // Pricing info
+  double price = 7;
+
+  int64 timestamp = 8;
+}

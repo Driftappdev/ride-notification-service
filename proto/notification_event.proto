@@ -1,0 +1,120 @@
+syntax = "proto3";
+
+package matching;
+
+option go_package = "dift_backend_go/notification-service/proto/pb/notification_eventpb;notification_eventpb";
+
+// ==============================
+// Common types
+// ==============================
+message Location {
+  double lat = 1;
+  double lng = 2;
+  string address = 3; // optional
+}
+message DriverInfo {
+  string driver_id = 1;
+  string name = 2;
+  string avatar_url = 3;
+  string car_type = 4;
+  string car_plate = 5;
+}
+
+// ==============================
+// From Matching Service -> Notification Service
+// ==============================
+message MatchingEvent {
+  string route_id = 1;
+  string user_id = 2;
+  string status = 3;                      // success / no_driver / driver_cancelled
+  DriverInfo driver = 4;
+  Location pickup_location = 5;
+  Location dropoff_location = 6;
+  double price = 7;
+  double distance_driver_to_pickup = 8;   // ระยะทางคนขับไปจุดรับ
+  double distance_pickup_to_dropoff = 9;  // ระยะทางจุดรับถึงจุดส่ง
+  int32 duration_total_sec = 10;          // เวลารวมวินาที
+  string route_polyline = 11;             // เส้นทาง map
+  int64 timestamp = 12;                   // Unix timestamp ของ event
+}
+
+// ==============================
+// Driver Accepted Event (Driver UI -> Notification Service)
+// ==============================
+message DriverAcceptedEvent {
+  string route_id = 1;
+  string driver_id = 2;
+  DriverInfo driver = 3;
+  int64 timestamp = 4;
+}
+
+// ==============================
+// Cancellation Event (Driver / Passenger cancels)
+// ==============================
+message CancellationEvent {
+  string route_id = 1;
+  string cancelled_by = 2; // "driver" or "passenger"
+  string reason = 3;       // optional ข้อความเหตุผล
+  int64 timestamp = 4;
+}
+
+// ==============================
+// Notification Service -> Driver Service
+// ==============================
+message DriverAssignmentEvent {
+  string route_id = 1;
+  string driver_id = 2;
+  string status = 3; // "assigned" | "cancelled"
+  Location pickup_location = 4;
+  Location dropoff_location = 5;
+  double price = 6;
+  int64 timestamp = 7;
+}
+
+// ==============================
+// Notification Service -> Travel Service
+// ==============================
+message TravelUpdateEvent {
+  string route_id = 1;
+  string status = 2; // "matched" | "cancelled"
+  string driver_id = 3;
+  Location pickup_location = 4;
+  Location dropoff_location = 5;
+  double price = 6;
+  int64 timestamp = 7;
+}
+
+// ==============================
+// Notification Service -> Passenger UI
+// ==============================
+message PassengerNotification {
+  string route_id = 1;
+  string status = 2; // "driver_assigned" | "driver_cancelled" | "passenger_cancelled"
+  DriverInfo driver = 3;
+  Location pickup_location = 4;
+  Location dropoff_location = 5;
+  double price = 6;
+  int64 timestamp = 7;
+  string cancelled_by = 8; // optional
+  string cancel_reason = 9; // optional
+}
+
+// ==============================
+// Notification Service -> Driver UI
+// ==============================
+message DriverNotification {
+  string route_id = 1;
+  string status = 2; // "assigned" | "cancelled"
+  string cancelled_by = 3; // optional
+  string cancel_reason = 4; // optional
+  int64 timestamp = 5;
+}
+
+// ==============================
+// Optional Ack response (Kafka/MQTT)
+// ==============================
+message NotificationAck {
+  string route_id = 1;
+  string status = 2; // "received" | "processed"
+  string message = 3; // optional descriptive message
+}

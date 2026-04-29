@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package ui;
+
+option go_package = "dift_backend_go/notification-service/proto/pb/notification_uipb;notification_uipb";
+// -----------------------------
+// Location info ใช้ซ้ำได้ทั้ง UI
+message Location {
+  double lat = 1;
+  double lng = 2;
+  string address = 3;
+}
+
+// -----------------------------
+// Status enum สำหรับ Driver UI
+enum DriverStatus {
+  WAITING_FOR_ACCEPT = 0;
+  ASSIGNED = 1;
+  ACCEPTED = 2;
+  CANCELLED = 3;
+}
+
+// ข้อมูลสำหรับ UI คนขับ
+message DriverNotification {
+  string route_id = 1;
+  string user_id = 2;
+  string driver_id = 3;
+  string driver_name = 4;
+  DriverStatus status = 5;
+
+  Location pickup = 6;
+  Location dropoff = 7;
+  double price = 8;
+  int64 timestamp = 9;
+}
+
+// -----------------------------
+// Status enum สำหรับ Passenger UI
+enum PassengerStatus {
+  DRIVER_ASSIGNED = 0;
+  DRIVER_ARRIVED = 1;
+  COMPLETED = 2;
+}
+
+// ข้อมูลสำหรับ UI ผู้โดยสาร
+message PassengerNotification {
+  string route_id = 1;
+  PassengerStatus status = 2;
+
+  // ข้อมูลคนขับ
+  message DriverInfo {
+    string id = 1;
+    string name = 2;
+    string avatar_url = 3;
+    string car_type = 4;
+    string car_plate = 5;
+  }
+
+  DriverInfo driver = 3;
+}

@@ -1,0 +1,11 @@
+# สำหรับ notification_event.proto
+protoc --go_out=./proto/pb/notification_eventpb --go-grpc_out=./proto/pb/notification_eventpb ./proto/notification_event.proto
+
+# สำหรับ notification_to_driver.proto
+protoc --go_out=./proto/pb/notification_driverpb --go-grpc_out=./proto/pb/notification_driverpb ./proto/notification_to_driver.proto
+
+# สำหรับ notification_to_travel.proto
+protoc --go_out=./proto/pb/notification_orderpb --go-grpc_out=./proto/pb/notification_orderpb ./proto/notification_to_order.proto
+
+# สำหรับ notification_ui.proto
+protoc --go_out=./proto/pb/notification_uipb --go-grpc_out=./proto/pb/notification_uipb ./proto/notification_ui.proto
