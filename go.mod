@@ -11,29 +11,26 @@ require (
 )
 
 require (
+	github.com/cespare/xxhash/v2 v2.3.0 // indirect
+	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
+	github.com/go-logr/logr v1.4.3 // indirect
+	github.com/go-logr/stdr v1.2.2 // indirect
+	github.com/go-redis/redis/v8 v8.11.5 // indirect
+	github.com/google/uuid v1.6.0 // indirect
 	github.com/nats-io/nats.go v1.47.0 // indirect
 	github.com/nats-io/nkeys v0.4.11 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
-	golang.org/x/crypto v0.47.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20260120221211-b8f7ae30c516 // indirect
+	go.opentelemetry.io/auto/sdk v1.2.1 // indirect
+	go.opentelemetry.io/otel v1.43.0 // indirect
+	go.opentelemetry.io/otel/metric v1.43.0 // indirect
+	go.opentelemetry.io/otel/trace v1.43.0 // indirect
+	go.uber.org/multierr v1.10.0 // indirect
+	go.uber.org/zap v1.28.0 // indirect
+	golang.org/x/crypto v0.50.0 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20260401024825-9d38bb4040a9 // indirect
 )
 
 require (
-	github.com/driftappdev/libpackage/goauth v0.0.0
-	github.com/driftappdev/libpackage/gocircuit v0.0.0
-	github.com/driftappdev/libpackage/goerror v0.0.0
-	github.com/driftappdev/libpackage/gologger v0.0.0
-	github.com/driftappdev/libpackage/gometrics v0.0.0
-	github.com/driftappdev/libpackage/goratelimit v0.0.0
-	github.com/driftappdev/libpackage/goretry v0.0.0
-	github.com/driftappdev/libpackage/gosanitizer v0.0.0
-	github.com/driftappdev/libpackage/gotimeout v0.0.0
-	github.com/driftappdev/libpackage/gotracing v0.0.0
-	github.com/driftappdev/libpackage/logmid/logging-middleware v0.0.0
-	github.com/driftappdev/libpackage/resilience/cache v0.0.0
-	github.com/driftappdev/libpackage/resilience/pagination v0.0.0
-	github.com/driftappdev/libpackage/resilience/validate v0.0.0
-	github.com/driftappdev/libpackage/resilience/validator v0.0.0
 	github.com/fsnotify/fsnotify v1.9.0 // indirect
 	github.com/go-viper/mapstructure/v2 v2.4.0 // indirect; indirect, required by viper
 	github.com/gorilla/websocket v1.4.2 // indirect
@@ -47,37 +44,47 @@ require (
 	github.com/spf13/pflag v1.0.10 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
-	golang.org/x/net v0.49.0 // indirect
-	golang.org/x/sys v0.40.0 // indirect
-	golang.org/x/text v0.33.0 // indirect
+	golang.org/x/net v0.52.0 // indirect
+	golang.org/x/sys v0.43.0 // indirect
+	golang.org/x/text v0.36.0 // indirect
 )
 
-replace github.com/driftappdev/libpackage/goauth => ../../libpackage/goauth
+require github.com/PlatformCore/middleware v0.0.0
 
-replace github.com/driftappdev/libpackage/resilience/cache => ../../libpackage/resilience/cache
+require github.com/PlatformCore/engine-core/runtime v0.0.0
 
-replace github.com/driftappdev/libpackage/gocircuit => ../../libpackage/gocircuit
+require github.com/PlatformCore/engine-core/messaging v0.0.0
 
-replace github.com/driftappdev/libpackage/goerror => ../../libpackage/goerror
+require github.com/PlatformCore/engine-core/observability v0.0.0
 
-replace github.com/driftappdev/libpackage/gologger => ../../libpackage/gologger
+require github.com/PlatformCore/engine-core/resilience v0.0.0
 
-replace github.com/driftappdev/libpackage/logmid/logging-middleware => ../../libpackage/logging-middleware
+replace github.com/PlatformCore/middleware => ../middleware
 
-replace github.com/driftappdev/libpackage/gometrics => ../../libpackage/gometrics
+replace github.com/PlatformCore/engine-core/runtime => ../engine-core/runtime
 
-replace github.com/driftappdev/libpackage/resilience/pagination => ../../libpackage/resilience/pagination
+replace github.com/PlatformCore/engine-core/messaging => ../engine-core/messaging
 
-replace github.com/driftappdev/libpackage/goratelimit => ../../libpackage/goratelimit
+replace github.com/PlatformCore/engine-core/observability => ../engine-core/observability
 
-replace github.com/driftappdev/libpackage/goretry => ../../libpackage/goretry
+replace github.com/PlatformCore/engine-core/resilience => ../engine-core/resilience
 
-replace github.com/driftappdev/libpackage/gosanitizer => ../../libpackage/gosanitizer
+require github.com/PlatformCore/engine-core/transport v0.0.0
 
-replace github.com/driftappdev/libpackage/gotimeout => ../../libpackage/gotimeout
+require github.com/PlatformCore/engine-core/security v0.0.0
 
-replace github.com/driftappdev/libpackage/gotracing => ../../libpackage/gotracing
+require github.com/PlatformCore/engine-core/validation v0.0.0
 
-replace github.com/driftappdev/libpackage/resilience/validate => ../../libpackage/resilience/validate
+require github.com/PlatformCore/engine-core/tenant v0.0.0
 
-replace github.com/driftappdev/libpackage/resilience/validator => ../../libpackage/resilience/validator
+require github.com/PlatformCore/engine-core/plugins v0.0.0
+
+replace github.com/PlatformCore/engine-core/transport => ../engine-core/transport
+
+replace github.com/PlatformCore/engine-core/security => ../engine-core/security
+
+replace github.com/PlatformCore/engine-core/validation => ../engine-core/validation
+
+replace github.com/PlatformCore/engine-core/tenant => ../engine-core/tenant
+
+replace github.com/PlatformCore/engine-core/plugins => ../engine-core/plugins

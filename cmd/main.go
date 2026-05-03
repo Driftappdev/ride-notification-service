@@ -20,6 +20,7 @@ import (
 )
 
 func main() {
+	_ = sc.NewEngineUnifiedBundle(sc.LoadEngineUnifiedConfigFromEnv("notification-service"))
 	cfg := config.LoadConfig()
 	health := servicecore.HealthController("notification-service", "v2-generic")
 	log.Printf("service=%s version=%s status=%s", health.Service, health.Version, health.Status)
@@ -45,6 +46,11 @@ func main() {
 	mux := http.NewServeMux()
 	h := httpadapter.NewGenericHandler(svc.Dispatch)
 	h.Register(mux)
+	if cfg.AdminControlEnabled {
+		adminControlSvc := service.NewAdminControlService(svc.Dispatch, cfg.AdminControlTimeoutMS)
+		adminControlHandler := httpadapter.NewAdminControlHandler(adminControlSvc, cfg.AdminControlSharedSecret)
+		adminControlHandler.Register(mux)
+	}
 
 	httpSrv := &http.Server{
 		Addr:              ":" + itoa(cfg.HTTPPort),

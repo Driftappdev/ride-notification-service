@@ -60,3 +60,8 @@ redis:
   ttl: "30s"
   keys:
     notification_prefix: "notification:"
+
+admin_control:
+  enabled: true
+  shared_secret: "change-this-enterprise-secret"
+  timeout_ms: 5000

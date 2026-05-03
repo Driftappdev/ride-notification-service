@@ -37,11 +37,11 @@ type Config struct {
 	MQTTSecure         bool
 
 	// Provider settings
-	DefaultChannels       []string
-	ProviderEventBusEnable   bool
-	ProviderMQTTEnable    bool
-	ProviderFCMEnable     bool
-	ProviderWebhookEnable bool
+	DefaultChannels        []string
+	ProviderEventBusEnable bool
+	ProviderMQTTEnable     bool
+	ProviderFCMEnable      bool
+	ProviderWebhookEnable  bool
 
 	FCMEndpoint  string
 	FCMServerKey string
@@ -57,6 +57,11 @@ type Config struct {
 	RedisDB                 int
 	RedisTTL                string
 	RedisNotificationPrefix string
+
+	// Admin control plane
+	AdminControlEnabled      bool
+	AdminControlSharedSecret string
+	AdminControlTimeoutMS    int
 }
 
 // LoadConfig loads configuration from config.yaml and environment variables.
@@ -91,11 +96,11 @@ func LoadConfig() *Config {
 		MQTTTopicGeneric:   v.GetString("mqtt.generic_topic"),
 		MQTTSecure:         v.GetBool("mqtt.secure"),
 
-		DefaultChannels:       v.GetStringSlice("providers.default_channels"),
-		ProviderEventBusEnable:   v.GetBool("providers.event_bus.enabled"),
-		ProviderMQTTEnable:    v.GetBool("providers.mqtt.enabled"),
-		ProviderFCMEnable:     v.GetBool("providers.fcm.enabled"),
-		ProviderWebhookEnable: v.GetBool("providers.webhook.enabled"),
+		DefaultChannels:        v.GetStringSlice("providers.default_channels"),
+		ProviderEventBusEnable: v.GetBool("providers.event_bus.enabled"),
+		ProviderMQTTEnable:     v.GetBool("providers.mqtt.enabled"),
+		ProviderFCMEnable:      v.GetBool("providers.fcm.enabled"),
+		ProviderWebhookEnable:  v.GetBool("providers.webhook.enabled"),
 
 		FCMEndpoint:  v.GetString("providers.fcm.endpoint"),
 		FCMServerKey: v.GetString("providers.fcm.server_key"),
@@ -105,11 +110,14 @@ func LoadConfig() *Config {
 		WebhookAuthToken: v.GetString("providers.webhook.auth_token"),
 		WebhookTimeoutMS: v.GetInt("providers.webhook.timeout_ms"),
 
-		RedisURL:                v.GetString("redis.url"),
-		RedisPassword:           v.GetString("redis.password"),
-		RedisDB:                 v.GetInt("redis.db"),
-		RedisTTL:                v.GetString("redis.ttl"),
-		RedisNotificationPrefix: v.GetString("redis.keys.notification_prefix"),
+		RedisURL:                 v.GetString("redis.url"),
+		RedisPassword:            v.GetString("redis.password"),
+		RedisDB:                  v.GetInt("redis.db"),
+		RedisTTL:                 v.GetString("redis.ttl"),
+		RedisNotificationPrefix:  v.GetString("redis.keys.notification_prefix"),
+		AdminControlEnabled:      v.GetBool("admin_control.enabled"),
+		AdminControlSharedSecret: v.GetString("admin_control.shared_secret"),
+		AdminControlTimeoutMS:    v.GetInt("admin_control.timeout_ms"),
 	}
 
 	if cfg.HTTPPort == 0 {
@@ -175,6 +183,9 @@ func LoadConfig() *Config {
 	}
 	if cfg.RedisNotificationPrefix == "" {
 		cfg.RedisNotificationPrefix = "notification:"
+	}
+	if cfg.AdminControlTimeoutMS <= 0 {
+		cfg.AdminControlTimeoutMS = 5000
 	}
 
 	log.Printf("[Config] loaded notification-service config on http_port=%d grpc_port=%d", cfg.HTTPPort, cfg.GRPCPort)

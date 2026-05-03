@@ -1,18 +1,11 @@
 package servicecore
 
-import (
-	"dift_backend_go/notification-service/internal/pkg"
-	coremid "dift_backend_go/notification-service/internal/servicecore/middleware"
+import "net/http"
 
-	"google.golang.org/grpc"
-)
+// HTTPMiddleware defines standard servicecore HTTP middleware signature.
+type HTTPMiddleware func(http.Handler) http.Handler
 
-func DefaultUnaryInterceptors(logger *pkg.Logger) []grpc.UnaryServerInterceptor {
-	return []grpc.UnaryServerInterceptor{
-		coremid.Context(),
-		coremid.Audit(logger),
-		coremid.Permission(),
-		coremid.Idempotency(),
-		coremid.Validation(),
-	}
+// DefaultHTTPMiddlewares returns enterprise baseline middleware chain placeholders.
+func DefaultHTTPMiddlewares() []HTTPMiddleware {
+	return []HTTPMiddleware{}
 }

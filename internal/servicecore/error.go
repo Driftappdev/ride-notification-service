@@ -1,9 +1,14 @@
 package servicecore
 
-import "dift_backend_go/notification-service/internal/pkg"
+// ServiceError is a local enterprise-safe error envelope for servicecore.
+type ServiceError struct {
+	Code    string
+	Status  int
+	Message string
+}
 
-type ServiceError = pkg.BaseError
+func (e *ServiceError) Error() string { return e.Message }
 
 func NewServiceError(code string, status int, message string) *ServiceError {
-	return pkg.NewBaseError(code, status, message)
+	return &ServiceError{Code: code, Status: status, Message: message}
 }
